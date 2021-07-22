@@ -6,9 +6,9 @@ import { SafeMath } from "../../../../lib/openzeppelin-contracts/contracts/math/
 
 import { IERC20Details } from "../../../external-interfaces/IERC20Details.sol";
 
-import { ICalc }       from "../../calculator/v1/interfaces/ICalc.sol";
-import { IOracle }     from "../../oracle/v1/interfaces/IOracle.sol";
-import { ISubFactory } from "../../subfactory/v1/interfaces/ISubFactory.sol";
+import { ICalc }       from "../../calculator/contracts/interfaces/ICalc.sol";
+import { IOracle }     from "../../oracle/contracts/interfaces/IOracle.sol";
+import { ISubFactory } from "../../subfactory/contracts/interfaces/ISubFactory.sol";
 
 import { IMapleGlobals } from "./interfaces/IMapleGlobals.sol";
 
