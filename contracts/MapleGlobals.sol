@@ -2,13 +2,13 @@
 pragma solidity 0.6.11;
 pragma experimental ABIEncoderV2;
 
-import { SafeMath } from "../../../../lib/openzeppelin-contracts/contracts/math/SafeMath.sol";
+import { SafeMath } from "../lib/openzeppelin-contracts/contracts/math/SafeMath.sol";
 
-import { IERC20Details } from "../../../external-interfaces/IERC20Details.sol";
+import { IERC20Details } from "./interfaces/IERC20Details.sol";
 
-import { ICalc }       from "../../calculator/contracts/interfaces/ICalc.sol";
-import { IOracle }     from "../../oracle/contracts/interfaces/IOracle.sol";
-import { ISubFactory } from "../../subfactory/contracts/interfaces/ISubFactory.sol";
+import { ICalc }       from "../lib/calculator/contracts/interfaces/ICalc.sol";
+import { IOracle }     from "../lib/oracle/contracts/interfaces/IOracle.sol";
+import { ISubFactory } from "../lib/subfactory/contracts/interfaces/ISubFactory.sol";
 
 import { IMapleGlobals } from "./interfaces/IMapleGlobals.sol";
 
