@@ -1,15 +1,15 @@
-[submodule "lib/ds-test"]
-	path = lib/ds-test
-	url = https://github.com/maple-labs/ds-test
-[submodule "lib/openzeppelin-contracts"]
-	path = lib/openzeppelin-contracts
-	url = https://github.com/Openzeppelin/openzeppelin-contracts.git
-[submodule "lib/subfactory"]
-	path = lib/subfactory
-	url = https://github.com/maple-labs/subfactory.git
-[submodule "lib/calculator"]
-	path = lib/calculator
+[submodule "modules/calculator"]
+	path = modules/calculator
 	url = https://github.com/maple-labs/calculator.git
-[submodule "lib/oracle"]
-	path = lib/oracle
+[submodule "modules/ds-test"]
+	path = modules/ds-test
+	url = https://github.com/maple-labs/ds-test
+[submodule "modules/openzeppelin-contracts"]
+	path = modules/openzeppelin-contracts
+	url = https://github.com/Openzeppelin/openzeppelin-contracts.git
+[submodule "modules/oracle"]
+	path = modules/oracle
 	url = https://github.com/maple-labs/oracle.git
+[submodule "modules/subfactory"]
+	path = modules/subfactory
+	url = https://github.com/maple-labs/subfactory.git
