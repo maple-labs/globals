@@ -1,0 +1,31 @@
+{
+    "language": "Solidity",
+    "sources": {
+      "contracts/MapleGlobals.sol": {
+        "urls": ["contracts/MapleGlobals.sol"]
+      },
+      "contracts/test/MapleGlobals.t.sol": {
+        "urls": ["contracts/test/MapleGlobals.t.sol"]
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": false
+      },
+      "outputSelection": {
+        "*": {
+          "*": [
+            "abi",
+            "metadata",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.gasEstimates"
+          ],
+          "": ["ast"]
+        }
+      },
+      "metadata": {
+        "bytecodeHash": "none"
+      }
+    }
+  }
