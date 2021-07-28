@@ -50,14 +50,34 @@ contract Governor {
         (ok,) = globals.call(abi.encodeWithSignature(sig, globalAdmin));
     }
 
+    function try_setValidBalancerPool(address globals, address balancerPool, bool valid) external returns (bool ok) {
+        string memory sig = "setValidBalancerPool(address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, balancerPool, valid));
+    }
+
+    function try_setValidPoolFactory(address globals, address factory, bool valid) external returns (bool ok) {
+        string memory sig = "setValidPoolFactory(address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, factory, valid));
+    }
+
+    function try_setValidLoanFactory(address globals, address factory, bool valid) external returns (bool ok) {
+        string memory sig = "setValidLoanFactory(address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, factory, valid));
+    }
+
+    function try_setValidSubFactory(address globals, address fac, address sub, bool valid) external returns (bool ok) {
+        string memory sig = "setValidSubFactory(address,address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, fac, sub, valid));
+    }
+
     function try_setDefaultUniswapPath(address globals, address from, address to, address mid) external returns (bool ok) {
         string memory sig = "setDefaultUniswapPath(address,address,address)";
         (ok,) = globals.call(abi.encodeWithSignature(sig, from, to, mid));
     }
 
-    function try_setCalc(address globals, address calc, bool valid) external returns (bool ok) {
-        string memory sig = "setCalc(address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, calc, valid));
+    function try_setPoolDelegateAllowlist(address globals, address pd, bool valid) external returns (bool ok) {
+        string memory sig = "setPoolDelegateAllowlist(address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, pd, valid));
     }
 
     function try_setCollateralAsset(address globals, address asset, bool valid) external returns (bool ok) {
@@ -70,29 +90,9 @@ contract Governor {
         (ok,) = globals.call(abi.encodeWithSignature(sig, asset, valid));
     }
 
-    function try_setValidLoanFactory(address globals, address factory, bool valid) external returns (bool ok) {
-        string memory sig = "setValidLoanFactory(address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, factory, valid));
-    }
-
-    function try_setValidPoolFactory(address globals, address factory, bool valid) external returns (bool ok) {
-        string memory sig = "setValidPoolFactory(address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, factory, valid));
-    }
-
-    function try_setValidSubFactory(address globals, address fac, address sub, bool valid) external returns (bool ok) {
-        string memory sig = "setValidSubFactory(address,address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, fac, sub, valid));
-    }
-
-    function try_setMapleTreasury(address globals, address _treasury) external returns (bool ok) {
-        string memory sig = "setMapleTreasury(address)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, _treasury));
-    }
-
-    function try_setPoolDelegateAllowlist(address globals, address pd, bool valid) external returns (bool ok) {
-        string memory sig = "setPoolDelegateAllowlist(address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, pd, valid));
+    function try_setCalc(address globals, address calc, bool valid) external returns (bool ok) {
+        string memory sig = "setCalc(address,bool)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, calc, valid));
     }
 
     function try_setInvestorFee(address globals, uint256 fee) external returns (bool ok) {
@@ -105,9 +105,19 @@ contract Governor {
         (ok,) = globals.call(abi.encodeWithSignature(sig, fee));
     }
 
+    function try_setMapleTreasury(address globals, address _treasury) external returns (bool ok) {
+        string memory sig = "setMapleTreasury(address)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, _treasury));
+    }
+
     function try_setDefaultGracePeriod(address globals, uint256 defaultGracePeriod) external returns (bool ok) {
         string memory sig = "setDefaultGracePeriod(uint256)";
         (ok,) = globals.call(abi.encodeWithSignature(sig, defaultGracePeriod));
+    }
+
+    function try_setMinLoanEquity(address globals, uint256 newLiquidity) external returns (bool ok) {
+        string memory sig = "setMinLoanEquity(uint256)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, newLiquidity));
     }
 
     function try_setFundingPeriod(address globals, uint256 fundingPeriod) external returns (bool ok) {
@@ -120,6 +130,11 @@ contract Governor {
         (ok,) = globals.call(abi.encodeWithSignature(sig, swapAmt));
     }
 
+    function try_setPriceOracle(address globals, address asset, address oracle) external returns (bool ok) {
+        string memory sig = "setPriceOracle(address,address)";
+        (ok,) = globals.call(abi.encodeWithSignature(sig, asset, oracle));
+    }
+
     function try_setPendingGovernor(address globals, address pendingGov) external returns (bool ok) {
         string memory sig = "setPendingGovernor(address)";
         (ok,) = globals.call(abi.encodeWithSignature(sig, pendingGov));
@@ -128,21 +143,6 @@ contract Governor {
     function try_acceptGovernor(address globals) external returns (bool ok) {
         string memory sig = "acceptGovernor()";
         (ok,) = globals.call(abi.encodeWithSignature(sig));
-    }
-
-    function try_setPriceOracle(address globals, address asset, address oracle) external returns (bool ok) {
-        string memory sig = "setPriceOracle(address,address)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, asset, oracle));
-    }
-
-    function try_setValidBalancerPool(address globals, address balancerPool, bool valid) external returns (bool ok) {
-        string memory sig = "setValidBalancerPool(address,bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, balancerPool, valid));
-    }
-
-    function try_setMinLoanEquity(address globals, uint256 newLiquidity) external returns (bool ok) {
-        string memory sig = "setMinLoanEquity(uint256)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, newLiquidity));
     }
 
 }
