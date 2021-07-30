@@ -10,26 +10,7 @@ import { CalculatorMock, OracleMock, SubFactoryMock, TokenMock } from "./Mocks.s
 
 import { MapleGlobals } from "../MapleGlobals.sol";
 
-contract MapleGlobalsTest is DSTest {
-    
-    GlobalAdmin realGlobalAdmin;
-    GlobalAdmin fakeGlobalAdmin;
-    Governor    realGov; 
-    Governor    fakeGov;
-
-    MapleGlobals globals;
-
-    function setUp() public {
-        realGlobalAdmin = new GlobalAdmin();
-        fakeGlobalAdmin = new GlobalAdmin();
-        realGov         = new Governor();
-        fakeGov         = new Governor();
-
-        address mplMock         = address(1);
-        address globalAdminMock = address(2);
-
-        globals = new MapleGlobals(address(realGov), mplMock, address(realGlobalAdmin));
-    }
+contract MapleGlobalsConstructorTest is DSTest {
 
     function test_constructor() public {
         address govMock         = address(0);
@@ -54,18 +35,30 @@ contract MapleGlobalsTest is DSTest {
         assertEq(globalsMock.lpWithdrawWindow(),     2 days);
     }
 
+}
+
+contract MapleGlobalsSettersGettersTest is DSTest {
+
+    function makeGlobalsAndGovs() internal returns (Governor realGov, Governor fakeGov, MapleGlobals globals) {
+        realGov = new Governor();
+        fakeGov = new Governor();
+        globals = new MapleGlobals(address(realGov), address(1), address(2));
+    }
+
     function test_transfer_governor() public {
-        assertTrue(!fakeGov.try_setPendingGovernor(address(globals), address(fakeGov)));
-        assertTrue(!realGov.try_setPendingGovernor(address(globals), address(0)));        // Cannot set governor to zero
-        assertTrue( realGov.try_setPendingGovernor(address(globals), address(fakeGov)));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setPendingGovernor(address(globals), address(fakeGov)));
+        assertTrue(!realGov.try_mapleGlobals_setPendingGovernor(address(globals), address(0)));        // Cannot set governor to zero
+        assertTrue( realGov.try_mapleGlobals_setPendingGovernor(address(globals), address(fakeGov)));
 
         assertEq(globals.pendingGovernor(), address(fakeGov));
         assertEq(globals.governor(),        address(realGov));
 
-        assertTrue(!fakeGov.try_setPendingGovernor(address(globals), address(realGov)));  // Still does not have permission as pendingGovernor
+        assertTrue(!fakeGov.try_mapleGlobals_setPendingGovernor(address(globals), address(realGov)));  // Still does not have permission as pendingGovernor
 
-        assertTrue(!realGov.try_acceptGovernor(address(globals)));
-        assertTrue( fakeGov.try_acceptGovernor(address(globals)));
+        assertTrue(!realGov.try_mapleGlobals_acceptGovernor(address(globals)));
+        assertTrue( fakeGov.try_mapleGlobals_acceptGovernor(address(globals)));
 
         assertEq(globals.pendingGovernor(), address(0));
         assertEq(globals.governor(),        address(fakeGov));
@@ -75,97 +68,125 @@ contract MapleGlobalsTest is DSTest {
     /*** Setters ***/
     /***************/
     function test_setStakerCooldownPeriod() public {
-        assertTrue(!fakeGov.try_setStakerCooldownPeriod(address(globals), 1 days));
-        assertTrue( realGov.try_setStakerCooldownPeriod(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setStakerCooldownPeriod(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setStakerCooldownPeriod(address(globals), 1 days));
         assertEq(globals.stakerCooldownPeriod(), 1 days);
     }   
     
     function test_setLpCooldownPeriod() public {
-        assertTrue(!fakeGov.try_setLpCooldownPeriod(address(globals), 1 days));
-        assertTrue( realGov.try_setLpCooldownPeriod(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setLpCooldownPeriod(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setLpCooldownPeriod(address(globals), 1 days));
         assertEq(globals.lpCooldownPeriod(), 1 days);
     }
     
     function test_setStakerUnstakeWindow() public {
-        assertTrue(!fakeGov.try_setStakerUnstakeWindow(address(globals), 1 days));
-        assertTrue( realGov.try_setStakerUnstakeWindow(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setStakerUnstakeWindow(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setStakerUnstakeWindow(address(globals), 1 days));
         assertEq(globals.stakerUnstakeWindow(), 1 days);
     }
     
     function test_setLpWithdrawWindow() public {
-        assertTrue(!fakeGov.try_setLpWithdrawWindow(address(globals), 1 days));
-        assertTrue( realGov.try_setLpWithdrawWindow(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setLpWithdrawWindow(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setLpWithdrawWindow(address(globals), 1 days));
         assertEq(globals.lpWithdrawWindow(), 1 days);
     }
     
     function test_setMaxSwapSlippage() public {
-        assertTrue(!fakeGov.try_setMaxSwapSlippage(address(globals), 10_000));
-        assertTrue(!realGov.try_setMaxSwapSlippage(address(globals), 10_001));  // Out of range
-        assertTrue( realGov.try_setMaxSwapSlippage(address(globals), 10_000));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setMaxSwapSlippage(address(globals), 10_000));
+        assertTrue(!realGov.try_mapleGlobals_setMaxSwapSlippage(address(globals), 10_001));  // Out of range
+        assertTrue( realGov.try_mapleGlobals_setMaxSwapSlippage(address(globals), 10_000));
         assertEq(globals.maxSwapSlippage(), 10_000);
     }
     
     function test_setGlobalAdmin() public {
-        assertTrue(!fakeGov.try_setGlobalAdmin(address(globals), address(1)));
-        assertTrue(!realGov.try_setGlobalAdmin(address(globals), address(0)));  // Can't set to zero address
+        Governor     realGov         = new Governor();
+        Governor     fakeGov         = new Governor();
+        GlobalAdmin  realGlobalAdmin = new GlobalAdmin();
+        MapleGlobals globals         = new MapleGlobals(address(realGov), address(1), address(realGlobalAdmin));
 
-        realGlobalAdmin.setProtocolPause(address(globals), true);
-        assertTrue(!realGov.try_setGlobalAdmin(address(globals), address(1)));
+        assertTrue(!fakeGov.try_mapleGlobals_setGlobalAdmin(address(globals), address(1)));
+        assertTrue(!realGov.try_mapleGlobals_setGlobalAdmin(address(globals), address(0)));  // Can't set to zero address
+
+        realGlobalAdmin.mapleGlobals_setProtocolPause(address(globals), true);
+        assertTrue(!realGov.try_mapleGlobals_setGlobalAdmin(address(globals), address(1)));
         
-        realGlobalAdmin.setProtocolPause(address(globals), false);
-        assertTrue( realGov.try_setGlobalAdmin(address(globals), address(1)));
+        realGlobalAdmin.mapleGlobals_setProtocolPause(address(globals), false);
+        assertTrue( realGov.try_mapleGlobals_setGlobalAdmin(address(globals), address(1)));
     }
     
     function test_setValidBalancerPool() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertTrue(!globals.isValidBalancerPool(address(1)));
 
-        assertTrue(!fakeGov.try_setValidBalancerPool(address(globals), address(1), true));
-        assertTrue( realGov.try_setValidBalancerPool(address(globals), address(1), true));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidBalancerPool(address(globals), address(1), true));
+        assertTrue( realGov.try_mapleGlobals_setValidBalancerPool(address(globals), address(1), true));
         assertTrue( globals.isValidBalancerPool(address(1)));
 
-        assertTrue(!fakeGov.try_setValidBalancerPool(address(globals), address(1), false));
-        assertTrue( realGov.try_setValidBalancerPool(address(globals), address(1), false));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidBalancerPool(address(globals), address(1), false));
+        assertTrue( realGov.try_mapleGlobals_setValidBalancerPool(address(globals), address(1), false));
         assertTrue(!globals.isValidBalancerPool(address(1)));
     }
     
     function test_setProtocolPause() public {
+        Governor     realGov         = new Governor();
+        GlobalAdmin  realGlobalAdmin = new GlobalAdmin();
+        GlobalAdmin  fakeGlobalAdmin = new GlobalAdmin();
+        MapleGlobals globals         = new MapleGlobals(address(realGov), address(1), address(realGlobalAdmin));
+        
         assertTrue(!globals.protocolPaused());
 
-        assertTrue(!fakeGlobalAdmin.try_setProtocolPause(address(globals), true));
-        assertTrue( realGlobalAdmin.try_setProtocolPause(address(globals), true));
+        assertTrue(!fakeGlobalAdmin.try_mapleGlobals_setProtocolPause(address(globals), true));
+        assertTrue( realGlobalAdmin.try_mapleGlobals_setProtocolPause(address(globals), true));
         assertTrue( globals.protocolPaused());
 
-        assertTrue(!fakeGlobalAdmin.try_setProtocolPause(address(globals), false));
-        assertTrue( realGlobalAdmin.try_setProtocolPause(address(globals), false));
+        assertTrue(!fakeGlobalAdmin.try_mapleGlobals_setProtocolPause(address(globals), false));
+        assertTrue( realGlobalAdmin.try_mapleGlobals_setProtocolPause(address(globals), false));
         assertTrue(!globals.protocolPaused());
         
     }
     
     function test_setValidPoolFactory() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertTrue(!globals.isValidPoolFactory(address(1)));
         
-        assertTrue(!fakeGov.try_setValidPoolFactory(address(globals), address(1), true));
-        assertTrue( realGov.try_setValidPoolFactory(address(globals), address(1), true));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidPoolFactory(address(globals), address(1), true));
+        assertTrue( realGov.try_mapleGlobals_setValidPoolFactory(address(globals), address(1), true));
         assertTrue( globals.isValidPoolFactory(address(1)));
 
-        assertTrue(!fakeGov.try_setValidPoolFactory(address(globals), address(1), false));
-        assertTrue( realGov.try_setValidPoolFactory(address(globals), address(1), false));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidPoolFactory(address(globals), address(1), false));
+        assertTrue( realGov.try_mapleGlobals_setValidPoolFactory(address(globals), address(1), false));
         assertTrue(!globals.isValidPoolFactory(address(1)));
     }
     
     function test_setValidLoanFactory() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertTrue(!globals.isValidLoanFactory(address(1)));
         
-        assertTrue(!fakeGov.try_setValidLoanFactory(address(globals), address(1), true));
-        assertTrue( realGov.try_setValidLoanFactory(address(globals), address(1), true));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidLoanFactory(address(globals), address(1), true));
+        assertTrue( realGov.try_mapleGlobals_setValidLoanFactory(address(globals), address(1), true));
         assertTrue( globals.isValidLoanFactory(address(1)));
 
-        assertTrue(!fakeGov.try_setValidLoanFactory(address(globals), address(1), false));
-        assertTrue( realGov.try_setValidLoanFactory(address(globals), address(1), false));
+        assertTrue(!fakeGov.try_mapleGlobals_setValidLoanFactory(address(globals), address(1), false));
+        assertTrue( realGov.try_mapleGlobals_setValidLoanFactory(address(globals), address(1), false));
         assertTrue(!globals.isValidLoanFactory(address(1)));
     }
     
     function test_setValidSubFactory() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         address loanFactoryMock = address(1);
         address poolFactoryMock = address(2);
         address subFactoryMock  = address(3);
@@ -173,161 +194,189 @@ contract MapleGlobalsTest is DSTest {
         assertTrue(!globals.validSubFactories(loanFactoryMock, subFactoryMock));
         assertTrue(!globals.validSubFactories(poolFactoryMock, subFactoryMock));   
 
-        assertTrue(!realGov.try_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can't call since loanFactory not whitelisted
-        assertTrue(!realGov.try_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can't call since poolFactory not whitelisted
+        assertTrue(!realGov.try_mapleGlobals_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can't call since loanFactory not whitelisted
+        assertTrue(!realGov.try_mapleGlobals_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can't call since poolFactory not whitelisted
 
-        realGov.setValidLoanFactory(address(globals), loanFactoryMock, true);
+        realGov.mapleGlobals_setValidLoanFactory(address(globals), loanFactoryMock, true);
 
-        assertTrue( realGov.try_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can   call since loanFactory is  whitelisted
-        assertTrue(!realGov.try_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can't call since poolFactory not whitelisted
+        assertTrue( realGov.try_mapleGlobals_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can   call since loanFactory is  whitelisted
+        assertTrue(!realGov.try_mapleGlobals_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can't call since poolFactory not whitelisted
 
         assertTrue( globals.validSubFactories(loanFactoryMock, subFactoryMock));
         assertTrue(!globals.validSubFactories(poolFactoryMock, subFactoryMock));   
 
-        realGov.setValidLoanFactory(address(globals), loanFactoryMock, false);
-        realGov.setValidPoolFactory(address(globals), poolFactoryMock, true);
+        realGov.mapleGlobals_setValidLoanFactory(address(globals), loanFactoryMock, false);
+        realGov.mapleGlobals_setValidPoolFactory(address(globals), poolFactoryMock, true);
 
-        assertTrue(!realGov.try_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can't call since loanFactory not whitelisted
-        assertTrue( realGov.try_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can   call since poolFactory is  whitelisted
+        assertTrue(!realGov.try_mapleGlobals_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Can't call since loanFactory not whitelisted
+        assertTrue( realGov.try_mapleGlobals_setValidSubFactory(address(globals), poolFactoryMock, subFactoryMock, true));  // Can   call since poolFactory is  whitelisted
         
-        assertTrue(!fakeGov.try_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Non-gov can't call
+        assertTrue(!fakeGov.try_mapleGlobals_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true));  // Non-gov can't call
     }
     
     function test_setDefaultUniswapPath() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         address from = address(1);
         address to   = address(2);
         address mid  = address(3);
 
         assertEq(globals.defaultUniswapPath(from, to), address(0));
 
-        assertTrue(!fakeGov.try_setDefaultUniswapPath(address(globals), from, to, mid));
-        assertTrue( realGov.try_setDefaultUniswapPath(address(globals), from, to, mid));
+        assertTrue(!fakeGov.try_mapleGlobals_setDefaultUniswapPath(address(globals), from, to, mid));
+        assertTrue( realGov.try_mapleGlobals_setDefaultUniswapPath(address(globals), from, to, mid));
 
         assertEq(globals.defaultUniswapPath(from, to), mid);
     }
     
     function test_setPoolDelegateAllowlist() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertTrue(!globals.isValidPoolDelegate(address(1)));
         
-        assertTrue(!fakeGov.try_setPoolDelegateAllowlist(address(globals), address(1), true));
-        assertTrue( realGov.try_setPoolDelegateAllowlist(address(globals), address(1), true));
+        assertTrue(!fakeGov.try_mapleGlobals_setPoolDelegateAllowlist(address(globals), address(1), true));
+        assertTrue( realGov.try_mapleGlobals_setPoolDelegateAllowlist(address(globals), address(1), true));
         assertTrue( globals.isValidPoolDelegate(address(1)));
 
-        assertTrue(!fakeGov.try_setPoolDelegateAllowlist(address(globals), address(1), false));
-        assertTrue( realGov.try_setPoolDelegateAllowlist(address(globals), address(1), false));
+        assertTrue(!fakeGov.try_mapleGlobals_setPoolDelegateAllowlist(address(globals), address(1), false));
+        assertTrue( realGov.try_mapleGlobals_setPoolDelegateAllowlist(address(globals), address(1), false));
         assertTrue(!globals.isValidPoolDelegate(address(1)));
     }
     
     function test_setCollateralAsset() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         address collateralAssetMock = address(new TokenMock());
 
         assertTrue(!globals.isValidCollateralAsset(collateralAssetMock));
         
-        assertTrue(!fakeGov.try_setCollateralAsset(address(globals), collateralAssetMock, true));
-        assertTrue( realGov.try_setCollateralAsset(address(globals), collateralAssetMock, true));
+        assertTrue(!fakeGov.try_mapleGlobals_setCollateralAsset(address(globals), collateralAssetMock, true));
+        assertTrue( realGov.try_mapleGlobals_setCollateralAsset(address(globals), collateralAssetMock, true));
         assertTrue( globals.isValidCollateralAsset(collateralAssetMock));
 
-        assertTrue(!fakeGov.try_setCollateralAsset(address(globals), collateralAssetMock, false));
-        assertTrue( realGov.try_setCollateralAsset(address(globals), collateralAssetMock, false));
+        assertTrue(!fakeGov.try_mapleGlobals_setCollateralAsset(address(globals), collateralAssetMock, false));
+        assertTrue( realGov.try_mapleGlobals_setCollateralAsset(address(globals), collateralAssetMock, false));
         assertTrue(!globals.isValidCollateralAsset(collateralAssetMock));
     }
     
     function test_setLiquidityAsset() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         address liquidityAssetMock = address(new TokenMock());
 
         assertTrue(!globals.isValidLiquidityAsset(liquidityAssetMock));
         
-        assertTrue(!fakeGov.try_setLiquidityAsset(address(globals), liquidityAssetMock, true));
-        assertTrue( realGov.try_setLiquidityAsset(address(globals), liquidityAssetMock, true));
+        assertTrue(!fakeGov.try_mapleGlobals_setLiquidityAsset(address(globals), liquidityAssetMock, true));
+        assertTrue( realGov.try_mapleGlobals_setLiquidityAsset(address(globals), liquidityAssetMock, true));
         assertTrue( globals.isValidLiquidityAsset(liquidityAssetMock));
 
-        assertTrue(!fakeGov.try_setLiquidityAsset(address(globals), liquidityAssetMock, false));
-        assertTrue( realGov.try_setLiquidityAsset(address(globals), liquidityAssetMock, false));
+        assertTrue(!fakeGov.try_mapleGlobals_setLiquidityAsset(address(globals), liquidityAssetMock, false));
+        assertTrue( realGov.try_mapleGlobals_setLiquidityAsset(address(globals), liquidityAssetMock, false));
         assertTrue(!globals.isValidLiquidityAsset(liquidityAssetMock));
     }
     
     function test_setCalc() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertTrue(!globals.validCalcs(address(1)));
         
-        assertTrue(!fakeGov.try_setCalc(address(globals), address(1), true));
-        assertTrue( realGov.try_setCalc(address(globals), address(1), true));
+        assertTrue(!fakeGov.try_mapleGlobals_setCalc(address(globals), address(1), true));
+        assertTrue( realGov.try_mapleGlobals_setCalc(address(globals), address(1), true));
         assertTrue( globals.validCalcs(address(1)));
 
-        assertTrue(!fakeGov.try_setCalc(address(globals), address(1), false));
-        assertTrue( realGov.try_setCalc(address(globals), address(1), false));
+        assertTrue(!fakeGov.try_mapleGlobals_setCalc(address(globals), address(1), false));
+        assertTrue( realGov.try_mapleGlobals_setCalc(address(globals), address(1), false));
         assertTrue(!globals.validCalcs(address(1)));
     }
     
     function test_setInvestorFee() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertEq(globals.treasuryFee(), 50);
         assertEq(globals.investorFee(), 50);
 
-        assertTrue(!fakeGov.try_setInvestorFee(address(globals), 9_050));  // Non-governor cant set
-        assertTrue(!realGov.try_setInvestorFee(address(globals), 9_951));  // 99.51 + 0.50 = 100.01% is outside of bounds
-        assertTrue( realGov.try_setInvestorFee(address(globals), 9_950));  // 100% is upper bound
+        assertTrue(!fakeGov.try_mapleGlobals_setInvestorFee(address(globals), 9_050));  // Non-governor cant set
+        assertTrue(!realGov.try_mapleGlobals_setInvestorFee(address(globals), 9_951));  // 99.51 + 0.50 = 100.01% is outside of bounds
+        assertTrue( realGov.try_mapleGlobals_setInvestorFee(address(globals), 9_950));  // 100% is upper bound
 
         assertEq(globals.investorFee(), 9_950);        
     }
     
     function test_setTreasuryFee() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertEq(globals.treasuryFee(), 50);
         assertEq(globals.investorFee(), 50);
 
-        assertTrue(!fakeGov.try_setTreasuryFee(address(globals), 9_050));  // Non-governor cant set
-        assertTrue(!realGov.try_setTreasuryFee(address(globals), 9_951));  // 99.51 + 0.50 = 100.01% is outside of bounds
-        assertTrue( realGov.try_setTreasuryFee(address(globals), 9_950));  // 100% is upper bound
+        assertTrue(!fakeGov.try_mapleGlobals_setTreasuryFee(address(globals), 9_050));  // Non-governor cant set
+        assertTrue(!realGov.try_mapleGlobals_setTreasuryFee(address(globals), 9_951));  // 99.51 + 0.50 = 100.01% is outside of bounds
+        assertTrue( realGov.try_mapleGlobals_setTreasuryFee(address(globals), 9_950));  // 100% is upper bound
 
         assertEq(globals.treasuryFee(), 9_950); 
     }
     
     function test_setMapleTreasury() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertEq(globals.mapleTreasury(), address(0));
         
-        assertTrue(!fakeGov.try_setMapleTreasury(address(globals), address(1)));
-        assertTrue( realGov.try_setMapleTreasury(address(globals), address(1)));
+        assertTrue(!fakeGov.try_mapleGlobals_setMapleTreasury(address(globals), address(1)));
+        assertTrue( realGov.try_mapleGlobals_setMapleTreasury(address(globals), address(1)));
 
         assertEq(globals.mapleTreasury(), address(1));
     }
     
     function test_setDefaultGracePeriod() public {
-        assertTrue(!fakeGov.try_setDefaultGracePeriod(address(globals), 1 days));
-        assertTrue( realGov.try_setDefaultGracePeriod(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setDefaultGracePeriod(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setDefaultGracePeriod(address(globals), 1 days));
         assertEq(globals.defaultGracePeriod(), 1 days);
     }
     
     function test_setMinLoanEquity() public {
-        assertTrue(!fakeGov.try_setMinLoanEquity(address(globals), 1000));
-        assertTrue( realGov.try_setMinLoanEquity(address(globals), 1000));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setMinLoanEquity(address(globals), 1000));
+        assertTrue( realGov.try_mapleGlobals_setMinLoanEquity(address(globals), 1000));
         assertEq(globals.minLoanEquity(), 1000);
         
     }
     
     function test_setFundingPeriod() public {
-        assertTrue(!fakeGov.try_setFundingPeriod(address(globals), 1 days));
-        assertTrue( realGov.try_setFundingPeriod(address(globals), 1 days));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setFundingPeriod(address(globals), 1 days));
+        assertTrue( realGov.try_mapleGlobals_setFundingPeriod(address(globals), 1 days));
         assertEq(globals.fundingPeriod(), 1 days);
     }
     
     function test_setSwapOutRequired() public {
-        assertTrue(!fakeGov.try_setSwapOutRequired(address(globals), 10_000));
-        assertTrue( realGov.try_setSwapOutRequired(address(globals), 10_000));
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
+        assertTrue(!fakeGov.try_mapleGlobals_setSwapOutRequired(address(globals), 10_000));
+        assertTrue( realGov.try_mapleGlobals_setSwapOutRequired(address(globals), 10_000));
         assertEq(globals.swapOutRequired(), 10_000);
     }
     
     function test_setPriceOracle() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertEq(globals.oracleFor(address(1)), address(0));
         
-        assertTrue(!fakeGov.try_setPriceOracle(address(globals), address(1), address(2)));
-        assertTrue( realGov.try_setPriceOracle(address(globals), address(1), address(2)));
+        assertTrue(!fakeGov.try_mapleGlobals_setPriceOracle(address(globals), address(1), address(2)));
+        assertTrue( realGov.try_mapleGlobals_setPriceOracle(address(globals), address(1), address(2)));
 
         assertEq(globals.oracleFor(address(1)), address(2));
     }
     
     function test_setPendingGovernor() public {
+        (Governor realGov, Governor fakeGov, MapleGlobals globals) = makeGlobalsAndGovs();
+
         assertEq(globals.pendingGovernor(), address(0));
         
-        assertTrue(!fakeGov.try_setPendingGovernor(address(globals), address(1)));
-        assertTrue( realGov.try_setPendingGovernor(address(globals), address(1)));
+        assertTrue(!fakeGov.try_mapleGlobals_setPendingGovernor(address(globals), address(1)));
+        assertTrue( realGov.try_mapleGlobals_setPendingGovernor(address(globals), address(1)));
 
         assertEq(globals.pendingGovernor(), address(1));
     }
@@ -336,22 +385,28 @@ contract MapleGlobalsTest is DSTest {
     /*** Getters ***/
     /***************/
     function test_getLatestPrice() public {
+        Governor     realGov = new Governor();
+        MapleGlobals globals = new MapleGlobals(address(realGov), address(1), address(2));
+
         address oracleMock = address(new OracleMock());
-        realGov.setPriceOracle(address(globals), address(1), oracleMock);
+        realGov.mapleGlobals_setPriceOracle(address(globals), address(1), oracleMock);
         assertEq(globals.getLatestPrice(address(1)), 100);
     }
 
     function test_isValidSubFactory() public {
+        Governor     realGov = new Governor();
+        MapleGlobals globals = new MapleGlobals(address(realGov), address(1), address(2));
+
         address loanFactoryMock = address(1);
         address poolFactoryMock = address(2);
         address subFactoryMock  = address(new SubFactoryMock(1));
 
-        realGov.setValidLoanFactory(address(globals), loanFactoryMock, true);
-        realGov.setValidLoanFactory(address(globals), poolFactoryMock, true);
+        realGov.mapleGlobals_setValidLoanFactory(address(globals), loanFactoryMock, true);
+        realGov.mapleGlobals_setValidLoanFactory(address(globals), poolFactoryMock, true);
 
         assertTrue(!globals.isValidSubFactory(loanFactoryMock, subFactoryMock, 1));
 
-        realGov.setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true);
+        realGov.mapleGlobals_setValidSubFactory(address(globals), loanFactoryMock, subFactoryMock, true);
 
         assertTrue(!globals.isValidSubFactory(poolFactoryMock, subFactoryMock, 1));  // Wrong superfactory
         assertTrue(!globals.isValidSubFactory(loanFactoryMock, subFactoryMock, 2));  // Wrong subfactory type
@@ -359,14 +414,20 @@ contract MapleGlobalsTest is DSTest {
     }
 
     function test_isValidCalc() public {
+        Governor     realGov = new Governor();
+        MapleGlobals globals = new MapleGlobals(address(realGov), address(1), address(2));
+
         address calc = address(new CalculatorMock(1));
     
-        realGov.setCalc(address(globals), calc, true);
+        realGov.mapleGlobals_setCalc(address(globals), calc, true);
         assertTrue(!globals.isValidCalc(calc, 2));
         assertTrue( globals.isValidCalc(calc, 1));
     }
 
     function test_getLpCooldownParams() public {
+        Governor     realGov = new Governor();
+        MapleGlobals globals = new MapleGlobals(address(realGov), address(1), address(2));
+
         (uint256 lpCooldownPeriod, uint256 lpWithdrawWindow) = globals.getLpCooldownParams();
 
         assertTrue(lpCooldownPeriod > 0 && lpWithdrawWindow > 0);  // Ensure real values are used

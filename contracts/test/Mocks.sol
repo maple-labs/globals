@@ -8,6 +8,7 @@ contract CalculatorMock {
     constructor(uint8 _calcType) public {
         calcType = _calcType;
     }
+    
 }
 
 contract OracleMock {
@@ -15,6 +16,7 @@ contract OracleMock {
     function getLatestPrice() external pure returns(uint256) {
         return 100;
     }
+
 }
 
 
@@ -25,6 +27,7 @@ contract SubFactoryMock {
     constructor(uint8 _factoryType) public {
         factoryType = _factoryType;
     }
+
 }
 
 contract TokenMock {

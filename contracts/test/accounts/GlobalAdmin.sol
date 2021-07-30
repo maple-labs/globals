@@ -5,12 +5,12 @@ import { IMapleGlobals } from "../../interfaces/IMapleGlobals.sol";
 
 contract GlobalAdmin {
 
-    function try_setProtocolPause(address globals, bool pause) external returns (bool ok) {
+    function try_mapleGlobals_setProtocolPause(address globals, bool pause) external returns (bool ok) {
         string memory sig = "setProtocolPause(bool)";
         (ok,) = globals.call(abi.encodeWithSignature(sig, pause));
     }
 
-    function setProtocolPause(address globals, bool pause) external {
+    function mapleGlobals_setProtocolPause(address globals, bool pause) external {
         IMapleGlobals(globals).setProtocolPause(pause);
     }
 
