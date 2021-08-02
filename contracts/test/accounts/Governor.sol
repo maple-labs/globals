@@ -11,11 +11,25 @@ contract Governor {
     /************************/
     /*** Direct Functions ***/
     /************************/
-    function mapleGlobals_setValidLoanFactory(address globals, address factory, bool valid)         external { IMapleGlobals(globals).setValidLoanFactory(factory, valid); }
-    function mapleGlobals_setValidPoolFactory(address globals, address factory, bool valid)         external { IMapleGlobals(globals).setValidPoolFactory(factory, valid); }
-    function mapleGlobals_setPriceOracle(address globals, address asset, address oracle)            external { IMapleGlobals(globals).setPriceOracle(asset, oracle); }
-    function mapleGlobals_setValidSubFactory(address globals, address fac, address sub, bool valid) external { IMapleGlobals(globals).setValidSubFactory(fac, sub, valid); }
-    function mapleGlobals_setCalc(address globals, address calc, bool valid)                        external { IMapleGlobals(globals).setCalc(calc, valid); }
+    function mapleGlobals_setValidLoanFactory(address globals, address factory, bool valid) external {
+        IMapleGlobals(globals).setValidLoanFactory(factory, valid); 
+    }
+
+    function mapleGlobals_setValidPoolFactory(address globals, address factory, bool valid) external {
+        IMapleGlobals(globals).setValidPoolFactory(factory, valid); 
+    }
+
+    function mapleGlobals_setPriceOracle(address globals, address asset, address oracle) external {
+        IMapleGlobals(globals).setPriceOracle(asset, oracle); 
+    }
+
+    function mapleGlobals_setValidSubFactory(address globals, address fac, address sub, bool valid) external {
+        IMapleGlobals(globals).setValidSubFactory(fac, sub, valid); 
+    }
+
+    function mapleGlobals_setCalc(address globals, address calc, bool valid) external {
+        IMapleGlobals(globals).setCalc(calc, valid); 
+    }
 
     /*********************/
     /*** Try Functions ***/
