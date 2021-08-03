@@ -11,7 +11,6 @@ contract CalculatorMock {
     
 }
 
-
 contract OracleMock {
 
     function getLatestPrice() external pure returns (uint256) {
@@ -19,7 +18,6 @@ contract OracleMock {
     }
 
 }
-
 
 contract SubFactoryMock {
 
@@ -30,7 +28,6 @@ contract SubFactoryMock {
     }
 
 }
-
 
 contract TokenMock {
 

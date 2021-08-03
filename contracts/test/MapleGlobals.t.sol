@@ -37,7 +37,6 @@ contract MapleGlobalsConstructorTest is DSTest {
 
 }
 
-
 contract MapleGlobalsGettersTest is DSTest {
     
     Governor     realGov;
@@ -88,7 +87,6 @@ contract MapleGlobalsGettersTest is DSTest {
         assertEq(lpWithdrawWindow, globals.lpWithdrawWindow());
     }
 }
-
 
 contract MapleGlobalsSettersTest is DSTest {
     Governor     realGov;
@@ -339,7 +337,6 @@ contract MapleGlobalsSettersTest is DSTest {
     }
 
 }
-
 
 contract MapleGlobalsAdminTest is DSTest {
 
