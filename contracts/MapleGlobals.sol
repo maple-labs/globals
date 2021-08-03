@@ -2,15 +2,13 @@
 pragma solidity 0.6.11;
 pragma experimental ABIEncoderV2;
 
-import { SafeMath } from "../../../../lib/openzeppelin-contracts/contracts/math/SafeMath.sol";
+import { ICalc }       from "../modules/calculator/contracts/interfaces/ICalc.sol";
+import { IOracle }     from "../modules/oracle/contracts/interfaces/IOracle.sol";
+import { SafeMath }    from "../modules/openzeppelin-contracts/contracts/math/SafeMath.sol";
+import { ISubFactory } from "../modules/subfactory/contracts/interfaces/ISubFactory.sol";
 
-import { IERC20Details } from "../../../external-interfaces/IERC20Details.sol";
-
-import { ICalc }       from "../../calculator/contracts/interfaces/ICalc.sol";
-import { IOracle }     from "../../oracle/contracts/interfaces/IOracle.sol";
-import { ISubFactory } from "../../subfactory/contracts/interfaces/ISubFactory.sol";
-
-import { IMapleGlobals } from "./interfaces/IMapleGlobals.sol";
+import { IERC20DetailsLike } from "./interfaces/IERC20DetailsLike.sol";
+import { IMapleGlobals }     from "./interfaces/IMapleGlobals.sol";
 
 /// @title MapleGlobals maintains a central source of parameters and allowlists for the Maple protocol.
 contract MapleGlobals is IMapleGlobals {
@@ -157,12 +155,12 @@ contract MapleGlobals is IMapleGlobals {
 
     function setCollateralAsset(address asset, bool valid) external override isGovernor {
         isValidCollateralAsset[asset] = valid;
-        emit CollateralAssetSet(asset, IERC20Details(asset).decimals(), IERC20Details(asset).symbol(), valid);
+        emit CollateralAssetSet(asset, IERC20DetailsLike(asset).decimals(), IERC20DetailsLike(asset).symbol(), valid);
     }
 
     function setLiquidityAsset(address asset, bool valid) external override isGovernor {
         isValidLiquidityAsset[asset] = valid;
-        emit LiquidityAssetSet(asset, IERC20Details(asset).decimals(), IERC20Details(asset).symbol(), valid);
+        emit LiquidityAssetSet(asset, IERC20DetailsLike(asset).decimals(), IERC20DetailsLike(asset).symbol(), valid);
     }
 
     function setCalc(address calc, bool valid) external override isGovernor {
