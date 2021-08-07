@@ -7,7 +7,7 @@ import { IOracle }     from "../modules/oracle/contracts/interfaces/IOracle.sol"
 import { SafeMath }    from "../modules/openzeppelin-contracts/contracts/math/SafeMath.sol";
 import { ISubFactory } from "../modules/subfactory/contracts/interfaces/ISubFactory.sol";
 
-import { IERC20DetailsLike } from "./interfaces/IERC20DetailsLike.sol";
+import { IERC20DetailsLike } from "./interfaces/Interfaces.sol";
 import { IMapleGlobals }     from "./interfaces/IMapleGlobals.sol";
 
 /// @title MapleGlobals maintains a central source of parameters and allowlists for the Maple protocol.
