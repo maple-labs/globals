@@ -1,0 +1,8 @@
+name: globals
+version: 1.0.0
+source: contracts
+packages:
+  - path: contracts/MapleGlobals.sol
+    contractName: MapleGlobals
+    customChecksum: 0xec65233be3b9749e87ec2ed49fafbe3a4744af3d96689b9a0a014ce75d60d4ee
+customDescription: Maple Globals Artifacts and ABIs
