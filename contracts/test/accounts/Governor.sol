@@ -28,6 +28,30 @@ contract Governor {
         IMapleGlobals(globals).setCalc(calc, valid); 
     }
 
+    function mapleGlobals_setValidBalancerPool(address globals, address balancerPool, bool valid) external {
+        IMapleGlobals(globals).setValidBalancerPool(balancerPool, valid);
+    }
+
+    function mapleGlobals_setLiquidityAsset(address globals, address asset, bool valid) external {
+        IMapleGlobals(globals).setLiquidityAsset(asset, valid);
+    }
+
+    function mapleGlobals_setCollateralAsset(address globals, address asset, bool valid) external {
+        IMapleGlobals(globals).setCollateralAsset(asset, valid);
+    }
+
+    function mapleGlobals_setPoolDelegateAllowlist(address globals, address pd, bool valid) external {
+        IMapleGlobals(globals).setPoolDelegateAllowlist(pd, valid);
+    }
+
+    function mapleGlobals_setMapleTreasury(address globals, address mapleTreasury) external {
+        IMapleGlobals(globals).setMapleTreasury(mapleTreasury);
+    }
+
+    function mapleGlobals_setMaxSwapSlippage(address globals, uint256 newSlippage) external returns (bool ok) {
+        IMapleGlobals(globals).setMaxSwapSlippage(newSlippage);
+    }
+
     /*********************/
     /*** Try Functions ***/
     /*********************/
@@ -154,6 +178,11 @@ contract Governor {
     function try_mapleGlobals_acceptGovernor(address globals) external returns (bool ok) {
         string memory sig = "acceptGovernor()";
         (ok,) = globals.call(abi.encodeWithSignature(sig));
+    }
+
+    function try_loan_reclaimERC20(address loan, address token) external returns (bool ok) {
+        string memory sig = "reclaimERC20(address)";
+        (ok,) = loan.call(abi.encodeWithSignature(sig, token));
     }
 
 }
