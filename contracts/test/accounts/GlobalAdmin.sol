@@ -8,6 +8,7 @@ contract GlobalAdmin {
     /************************/
     /*** Direct Functions ***/
     /************************/
+
     function mapleGlobals_setProtocolPause(address globals, bool pause) external {
         IMapleGlobals(globals).setProtocolPause(pause);
     }
@@ -15,9 +16,9 @@ contract GlobalAdmin {
     /*********************/
     /*** Try Functions ***/
     /*********************/
+
     function try_mapleGlobals_setProtocolPause(address globals, bool pause) external returns (bool ok) {
-        string memory sig = "setProtocolPause(bool)";
-        (ok,) = globals.call(abi.encodeWithSignature(sig, pause));
+        (ok,) = globals.call(abi.encodeWithSelector(IMapleGlobals.setProtocolPause.selector, pause));
     }
 
 }
